@@ -1,0 +1,22 @@
+﻿<Window x:Class="TeamWPF.ErrorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Height="100" Width="170"
+        Name="Errors"
+        Topmost="True">
+    <Grid>
+        <TextBlock Name="ErrorText" 
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center">
+        </TextBlock>
+        <Button 
+            VerticalAlignment="Bottom" 
+            HorizontalAlignment="Center" 
+            Content="OK" Margin="48,48,49,3" 
+            Click="Button_Click"
+            IsDefault="true">
+            
+        </Button>
+    </Grid>
+</Window>
+   

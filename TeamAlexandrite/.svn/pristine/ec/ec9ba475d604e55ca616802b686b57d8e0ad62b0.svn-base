@@ -1,0 +1,124 @@
+﻿<Window x:Class="TeamWPF.IndividualWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:CourierManager;assembly=CourierManager"
+        Title="IndividualWindow" Height="350" Width="500"
+        Background="BlanchedAlmond"
+        BorderBrush="Black"
+        Topmost="True">
+    <Grid Name="IndividualGridRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120">
+            </ColumnDefinition>
+            <ColumnDefinition Width="370">
+            </ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Label Grid.Column="1" FontSize="20" Content="Individual Form"/>
+        <Label BorderBrush="Black"
+               BorderThickness="1"
+               Grid.Row="2" 
+               Grid.Column="0"
+               Visibility="Visible"
+               Name="IndividualFirstName"
+               Content="First Name:"
+               />
+        <Label 
+            BorderBrush="Black"
+            BorderThickness="1"
+            Grid.Row="3" 
+            Grid.Column="0"
+            Visibility="Visible"
+            Name="IndividualLastName"
+            Content="Last Name:"/>
+        <Label
+            BorderBrush="Black"
+            BorderThickness="1"
+            Grid.Row="4" 
+            Grid.Column="0"
+            Visibility="Visible"
+            Name="IndividualAddress"
+            Content="Address:"/>
+        <Label
+            BorderBrush="Black"
+            BorderThickness="1"
+            Grid.Row="1" 
+            Grid.Column="0"
+            Visibility="Visible"
+            Name="IndividualID"
+            Content="ID Number:"/>
+        <Label 
+            BorderBrush="Black"
+            BorderThickness="1"
+            Grid.Row="5" 
+            Grid.Column="0"
+            Visibility="Visible"
+            Name="IndividualPhone"
+            Content="Phone:"/>
+        <TextBox
+            Name="IndividualNameInput"
+            Visibility="Visible"
+            FontWeight="Black"
+            FontSize="20"
+            Background="Azure"
+            Text=""
+            TextDecorations=""
+            Grid.Row="2"
+            Grid.Column="1"
+            />
+        <TextBox
+            Name="IndividualLastNameInput"
+            Visibility="Visible"
+            FontWeight="Black"
+            FontSize="20"
+            Background="Azure"
+            Text=""
+            TextDecorations=""
+            Grid.Row="3"
+            Grid.Column="1"
+            />
+        <TextBox
+            Name="IndividualAddressInput"
+            Visibility="Visible"
+            FontWeight="Black"
+            FontSize="20"
+            Background="Azure"
+            Text=""
+            TextDecorations=""
+            Grid.Row="4"
+            Grid.Column="1"
+            />
+        <TextBox
+            Name="IndividualIDNumberInput"
+            Visibility="Visible"
+            FontWeight="Black"
+            FontSize="20"
+            Background="Azure"
+            Text=""
+            TextDecorations=""
+            Grid.Row="1"
+            Grid.Column="1"
+            LostFocus="IndividualIDNumberLostFocus"
+            />
+        <TextBox
+            Name="IndividualPhoneInput"
+            Visibility="Visible"
+            FontWeight="Black"
+            FontSize="20"
+            Background="Azure"
+            Text=""
+            TextDecorations=""
+            Grid.Row="5"
+            Grid.Column="1"
+            />
+        <Button Name="SubmitIndividualData" Content="SUBMIT"  Background="LightGray"  FontSize="20" HorizontalAlignment="Left"  Height="30" Width="95" Grid.Column="1" Margin="199,51,0,-50" Grid.Row="5" RenderTransformOrigin="0.484,0.2"/>
+    </Grid>
+
+</Window>

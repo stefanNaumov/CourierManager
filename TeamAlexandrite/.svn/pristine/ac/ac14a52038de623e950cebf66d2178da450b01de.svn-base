@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CourierManager
+{
+    public class Truck : TrasportUnit
+    {
+        public Truck(string licensePlate, int load, int capacity) 
+            : base(licensePlate, load, capacity)
+        {
+        }
+    }
+}

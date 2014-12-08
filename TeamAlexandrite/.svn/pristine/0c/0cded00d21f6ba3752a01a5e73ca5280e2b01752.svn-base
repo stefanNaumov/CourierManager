@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CourierManager
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //Freight newFreight = new SmallPacket(4.2m);
+            //Freight secondFreight = new SmallPacket(3.5m);
+            //Freight thirsFreight = new SmallPacket(4.6m);
+            //secondFreight.DeleteBillOfLading();
+            //Console.WriteLine(newFreight.BillOfLading);
+            Truck truck = new Truck("00123", 12, 15);
+            truck.Route.AddLocation(Locations.Pirdop);
+        }
+    }
+}

@@ -1,0 +1,53 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+
+namespace TeamWPF
+{
+    /// <summary>
+    /// Interaction logic for IndividualWindow.xaml
+    /// </summary>
+    public partial class IndividualWindow : Window
+    {
+        public IndividualWindow()
+        {
+            InitializeComponent();
+        }
+
+        private void IndividualIDNumberLostFocus(object sender, RoutedEventArgs e)
+        {
+            CourierManager.IndividualCustomer tempCustomer = 
+                new CourierManager.IndividualCustomer("", "", "", ulong.Parse(this.IndividualIDNumberInput.Text), 1, false);
+            if (!tempCustomer.ValidateIDNumber())
+            {
+                InvalidIDNumber newIDWindow = new InvalidIDNumber();
+                newIDWindow.Show();
+            }
+            tempCustomer.PathToDatabase = "../../../CourierManager/IndividualCustomers.txt";
+            List<string> allIndividualClients = tempCustomer.ReadClientData();
+            for (int record = 0; record < allIndividualClients.Count; record++)
+            {
+                string[] dataArray=allIndividualClients[record].Split('*');
+                string currentIDNumber = dataArray[4];
+                if (this.IndividualIDNumberInput.Text==currentIDNumber)
+                {
+                    this.IndividualNameInput.Text=dataArray[1];
+                    this.IndividualLastNameInput.Text = dataArray[2];
+                    this.IndividualAddressInput.Text = dataArray[3];
+                    this.IndividualPhoneInput.Text = dataArray[5];
+                    break;
+                }
+            }
+        }
+    }
+}

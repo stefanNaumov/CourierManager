@@ -1,0 +1,97 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+
+namespace TeamWPF
+{
+    /// <summary>
+    /// Interaction logic for FreightWindow.xaml
+    /// </summary>
+    public partial class CompanyWindow : Window
+    {
+        public CompanyWindow()
+        {
+            InitializeComponent();
+        }
+
+        private void ProcesssCompanyStatute(object sender, RoutedEventArgs e)
+        {
+            NewClient.Click += (send, even) =>
+                {
+                    DefaultStatute.Header = NewClient.Header;
+                };
+            VIPClient.Click += (send, even) =>
+                {
+                    DefaultStatute.Header = VIPClient.Header;
+                };
+            ClientWithPreferences.Click += (send, even) =>
+                {
+                    DefaultStatute.Header = ClientWithPreferences.Header;
+                };
+        }
+
+        private void CompanyIDNumberLostFocus(object sender, RoutedEventArgs e)
+        {
+            CourierManager.CompanyCustomer tempCustomer =
+                new CourierManager.CompanyCustomer("", "", ulong.Parse(this.CompanyIDNumberInput.Text), 1, false);
+            if (!tempCustomer.ValidateIDNumber())
+            {
+                InvalidIDNumber newIDWindow = new InvalidIDNumber();
+                newIDWindow.Show();
+            }
+            tempCustomer.PathToDatabase = "../../../CourierManager/CompanyCustomers.txt";
+            List<string> allCompanyClients = tempCustomer.ReadClientData();
+            for (int record = 0; record < allCompanyClients.Count; record++)
+            {
+                string[] dataArray = allCompanyClients[record].Split('*');
+                string currentIDNumber = dataArray[3];
+                if (this.CompanyIDNumberInput.Text == currentIDNumber)
+                {
+                    this.CompanyNameInput.Text = dataArray[1];
+                    this.CompanyAddressInput.Text = dataArray[2];
+                    this.CompanyPhoneInput.Text = dataArray[4];
+                    break;
+                }
+            }
+        }
+
+        private void ProcessCompanyClient(object sender, RoutedEventArgs e)
+        {
+            if (this.SenderType.Visibility == System.Windows.Visibility.Visible)
+            {
+                //making the window form change from sender to recipient
+                //making the sender fields collapsed
+                this.SenderType.Visibility = System.Windows.Visibility.Collapsed;
+                this.CompanyForm.Visibility = System.Windows.Visibility.Collapsed;
+                this.CompanyID.Visibility = System.Windows.Visibility.Collapsed;
+                this.CompanyName.Visibility = System.Windows.Visibility.Collapsed;
+                this.CompanyAddress.Visibility = System.Windows.Visibility.Collapsed;
+                this.CompanyPhone.Visibility = System.Windows.Visibility.Collapsed;
+                this.CompanyStatute.Visibility = System.Windows.Visibility.Collapsed;
+                this.CompanyIDNumberInput.Visibility = System.Windows.Visibility.Collapsed;
+                this.CompanyNameInput.Visibility = System.Windows.Visibility.Collapsed;
+                this.CompanyAddressInput.Visibility = System.Windows.Visibility.Collapsed;
+                this.CompanyPhoneInput.Visibility = System.Windows.Visibility.Collapsed;
+                this.StatuteMenu.Visibility = System.Windows.Visibility.Collapsed;
+                //making the recipient fields visible
+                this.RecipientType.Visibility = System.Windows.Visibility.Visible;
+                this.RecipientName.Visibility = System.Windows.Visibility.Visible;
+                this.RecipientAddress.Visibility = System.Windows.Visibility.Visible;
+                this.RecipientPhone.Visibility = System.Windows.Visibility.Visible;
+                this.RecipientNameInput.Visibility = System.Windows.Visibility.Visible;
+                this.RecipientAddressInput.Visibility = System.Windows.Visibility.Visible;
+                this.RecipientPhoneInput.Visibility = System.Windows.Visibility.Visible;
+            }
+        }
+    }
+}

@@ -1,0 +1,30 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CourierManager
+{
+    public abstract class Freight
+    {
+        public decimal Weight { get; set; }
+        public decimal Width { get; set; }
+        public decimal Height { get; set; }
+        public decimal Depth { get; set; }
+        public string BillOfLading { get; set; }
+
+        public Freight(decimal weight)
+        {
+            this.Weight = weight;
+        }
+
+        public Freight(decimal weight, decimal width, decimal height, decimal depth)
+            : this(weight)
+        {
+            this.Width = width;
+            this.Height = height;
+            this.Depth = depth;
+        }
+    }
+}

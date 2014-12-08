@@ -1,0 +1,43 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CourierManager
+{
+    public abstract class Subject
+    {
+        private string iDNumber;
+
+        public string Address { get; set; }
+
+        public ulong Phone { get; set; }
+
+        public string IDNumber
+        {
+            get
+            { 
+                return iDNumber ;
+            }
+
+            set
+            {
+                this.iDNumber = value;
+                ValidateIDNumber();
+            }
+        }
+
+        public Subject(string address, string idNumber, ulong phone)
+        {
+            this.Address = address;
+            this.IDNumber = idNumber;
+            this.Phone = phone;
+        }
+
+        public virtual bool ValidateIDNumber()
+        {
+            return true;
+        }
+    }
+}

@@ -1,0 +1,33 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CourierManager
+{
+    public abstract class TrasportUnit
+    {
+        public string LicensePlate { get; set; }
+        public int Load { get; set; }
+        public int Capacity { get; set; }
+        public Route Route { get; set; }
+        public List<Driver> UnitDrivers;
+        public bool isBeingRepaired { get; protected set; }
+        public bool isOnACourse { get; protected set; }
+        Route route;
+
+        public TrasportUnit(string licensePlate, int load, int capacity)
+        {
+            this.LicensePlate = licensePlate;
+            this.Load = load;
+            this.Capacity = capacity;
+            route = new Route();
+        }
+        public bool IsUnitAvaliable
+        {
+            get { return this.isBeingRepaired == false && this.isOnACourse == false; }
+        }
+        
+    }
+}

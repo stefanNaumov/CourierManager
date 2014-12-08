@@ -1,0 +1,106 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+namespace CourierManager
+{
+    public abstract class Customer : Subject
+    {
+        public int ClientNumber { get; private set; }
+
+        public Customer(string address, ulong idNumber, ulong phone) 
+            : base(address, idNumber, phone)
+        {
+            //we generate new ClientNumber only if this client's idNumber is not fount in the database
+            if (this.IsANewCustomer(idNumber) == true)
+            {
+                this.ClientNumber = GenerateNumber();
+                this.SaveClientData(ClientNumber, address, idNumber, phone);
+            }
+            //if an existing client's idNumber is needed
+            else
+            {
+                this.ClientNumber = GetExistingCustomerIndex(idNumber);
+            }
+        }
+        public int GetExistingCustomerIndex(ulong idNumber)
+        {
+            StreamReader reader = new StreamReader(@"..\..\ClientNumbers.txt");
+            int index = 0;
+            using (reader)
+            {
+                string data = reader.ReadToEnd();
+                string[] lines = data.Split('\n');
+                for (int i = 0; i < lines.Length - 1; i++)
+                {
+                    string[] currentLine = lines[i].Split(' ');
+                    //the second element in the array is the IDNumber
+                    if (currentLine[2] == this.IDNumber.ToString())
+                    {
+                        index = i + 1;
+                        break;
+                    }
+                }
+            }
+            return index;
+        }
+        public bool IsANewCustomer(ulong idNumber)
+        {
+            if (!(File.Exists(@"..\..\ClientNumbers.txt")))
+            {
+                return true;
+            }
+            StreamReader reader = new StreamReader(@"..\..\ClientNumbers.txt");
+            using (reader)
+            {
+                string data = reader.ReadToEnd();
+                //first step - take the whole data from the text file and split it by every new line
+                string[] lines = data.Split('\n');
+                for (int i = 0; i < lines.Length - 1; i++)
+                {
+                    //every line is a client,so we split every line to take every client's data
+                    string[] currentLine = lines[i].Split(' ');
+                    if (currentLine[2] == this.IDNumber.ToString())
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        public int GenerateNumber()
+        {
+            int number = 1;
+            //if a file ClientsNumber does not exist means that  this is the first client
+            if (!(File.Exists(@"..\..\ClientNumbers.txt")))
+            {
+                return number;
+            }
+            else
+            {
+                StreamReader reader = new StreamReader(@"..\..\ClientNumbers.txt");
+                using (reader)
+                {
+                    string data = reader.ReadToEnd();
+                    string[] lines = data.Split('\n');
+                    number = lines.Length;
+                }
+            }
+            return number;
+        }
+        public void SaveClientData(int clientNumber,string address,ulong idNumber,ulong phone)
+        {
+            StreamWriter writer = new StreamWriter(@"..\..\ClientNumbers.txt",true);
+            StringBuilder client = new StringBuilder();
+            client.AppendFormat("{0} {1} {2} {3}", clientNumber,address,idNumber,phone);
+            using (writer)
+            {
+                
+                writer.WriteLine(client.ToString());
+            }
+        }
+    }
+   
+}

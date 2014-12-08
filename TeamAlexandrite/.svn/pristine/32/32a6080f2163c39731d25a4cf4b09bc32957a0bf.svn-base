@@ -1,0 +1,48 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CourierManager
+{
+    public abstract class Employee : Subject, IPerson
+    {
+        public string FirstName
+        {
+            get
+            {
+                // TODO: Implement this property getter
+                throw new NotImplementedException();
+            }
+            set
+            {
+                // TODO: Implement this property setter
+                throw new NotImplementedException();
+            }
+        }
+
+        public string LastName
+        {
+            get
+            {
+                // TODO: Implement this property getter
+                throw new NotImplementedException();
+            }
+            set
+            {
+                // TODO: Implement this property setter
+                throw new NotImplementedException();
+            }
+        }
+
+        public Employee(string firstName, string lastName, string address, ulong idNumber, ulong phone)
+            : base(address, idNumber, phone)
+        {
+            this.FirstName = firstName;
+            this.LastName = lastName;
+        }
+
+       
+    }
+}

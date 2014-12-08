@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CourierManager
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            
+            //secondFreight.DeleteBillOfLading();
+            //Console.WriteLine(newFreight.BillOfLading);
+            IndividualCustomer individual = new IndividualCustomer("Pesho", "Ivanov", "Sofia", 7802164242, 0888444555);
+            //Console.WriteLine(individual.ClientNumber);
+            CompanyCustomer company = new CompanyCustomer("a", "BobovDol", 1166445588, 5554448880);
+            //Console.WriteLine(company.ClientNumber);
+            CompanyCustomer newCompany = new CompanyCustomer("b", "Kaspichan", 1234567895, 1234567891);
+            //Console.WriteLine(newCompany.ClientNumber);
+            Freight newFreight = new Freight(25.2m,individual,company,Location.Bourgas);
+            Freight secondFreight = new Freight(3.5m,company,newCompany,Location.Plovdiv);
+            //Freight thirsFreight = new SmallPacket(4.6m);
+            Console.WriteLine(EnumHelper.ReturnValue("VN"));
+        }
+    }
+}

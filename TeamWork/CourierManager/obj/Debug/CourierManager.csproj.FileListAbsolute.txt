@@ -1,0 +1,6 @@
+D:\telerik\TeamWork\OOP\team-work-alexandrite\TeamWork\CourierManager\bin\Debug\CourierManager.exe
+D:\telerik\TeamWork\OOP\team-work-alexandrite\TeamWork\CourierManager\bin\Debug\CourierManager.pdb
+D:\telerik\TeamWork\OOP\team-work-alexandrite\TeamWork\CourierManager\obj\Debug\CourierManager.exe
+D:\telerik\TeamWork\OOP\team-work-alexandrite\TeamWork\CourierManager\obj\Debug\CourierManager.pdb
+D:\telerik\TeamWork\Alexandrite\TeamWork\CourierManager\obj\Debug\CourierManager.exe
+D:\telerik\TeamWork\Alexandrite\TeamWork\CourierManager\obj\Debug\CourierManager.pdb

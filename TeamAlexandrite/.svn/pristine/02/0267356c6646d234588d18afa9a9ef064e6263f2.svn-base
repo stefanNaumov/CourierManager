@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CourierManager
+{
+    public enum Route
+    {
+        Route1,
+        Route2,
+        Route3,
+        Route4,
+        Route5
+    }
+}

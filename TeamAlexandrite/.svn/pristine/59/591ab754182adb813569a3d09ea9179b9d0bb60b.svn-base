@@ -1,0 +1,41 @@
+﻿<Window x:Class="TeamWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Courier Manager" 
+        Height="700" 
+        Width="1100"
+        Background="PaleTurquoise"
+        >
+
+    <!--<Window.Background>
+        <ImageBrush ImageSource="FrontPicture.jpg"></ImageBrush>
+    </Window.Background>-->
+
+    <Grid x:Name="LayoutRoot">
+        <Grid Name="Title" Background="MistyRose" Height="120" Margin="0,0,0,553" >
+            <Image Source="FrontPicture.jpg" HorizontalAlignment="Left"></Image>
+        </Grid>
+        <Button Name="NewFreight" Content="New Freight" HorizontalAlignment="Left" Margin="865,125,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"></Button>
+        <Grid Name="FirstMenu" Width="250" Height="100" Visibility="Collapsed">
+            <CheckBox Name="SmallPacket" Content="Small Packet" ></CheckBox>
+            <CheckBox Name="MediumPacket" Content="Medium Packet"></CheckBox>
+            <CheckBox Name="LargePacket" Content="Large Packet" ></CheckBox>
+            <CheckBox Name="IndividualCustomer" Content="Individual Customer"></CheckBox>
+            <CheckBox Name="CompanyCustomer" Content="Company Customer"></CheckBox>
+        </Grid>
+        <Button Name="Next" Content="Next =>" Width="100" Height="50" Margin="250,300,0,0" Visibility="Collapsed" Click="Next_Click"></Button>
+        <Grid Name="ClientMenu" Visibility="Collapsed">
+            <Label Name="LabelIDNumber" Content="ID Number" Margin="217,126,809,512"/>
+            <Label Name="LabelFirstName" Content="First Name" Margin="222,181,804,457"/>
+            <Label Name="LabelLastName" Content="Last Name" Margin="222,240,804,398"/>
+            <Label Name="LabelAddress" Content="Address" Margin="222,297,804,341"/>
+            <Label Name="LabelPhone" Content="Phone" Margin="222,353,804,285"/>
+            <TextBox Name="IDNumber" Margin="288,126,664,512" />
+            <TextBox Name="FirstName" Margin="288,181,664,457" />
+            <TextBox Name="LastName" Margin="288,240,664,398" />
+            <TextBox Name="Address" Margin="288,297,664,341" />
+            <TextBox Name="Phone" Margin="288,353,664,285" />
+        </Grid>
+        <Button Content="Reports" HorizontalAlignment="Left" Margin="865,165,0,0" VerticalAlignment="Top" Width="75" Click="Reports_Click"/>
+    </Grid>
+</Window>

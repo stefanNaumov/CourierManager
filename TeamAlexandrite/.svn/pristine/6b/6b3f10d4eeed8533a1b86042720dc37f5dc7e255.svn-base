@@ -1,0 +1,207 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CourierManager
+{
+    public abstract class Freight
+    {
+        private decimal weight;
+        private decimal width;
+        private decimal height;
+        private decimal depth;
+        private Customer sender;
+        private Customer recipient;
+
+        public Customer Recipient
+        {
+            get { return this.recipient; }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentException("You must enter a recipient");
+                }
+                this.recipient = value;
+            }
+        }
+
+        public Customer Sender
+        {
+            get { return this.sender; }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentException("You must enter a sender");
+                }
+                this.sender = value;
+            }
+        }
+
+        public decimal Weight
+        {
+            get { return this.weight; }
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentException("The weight must be positive number.");
+                }
+                this.weight = value;
+            }
+        }
+
+        public decimal Width
+        {
+            get { return width; }
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentException("The width must be positive number.");
+                }
+                this.width = value;
+            }
+        }
+
+        public decimal Height
+        {
+            get { return height; }
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentException("The height must be positive number.");
+                }
+                this.height = value;
+            }
+        }
+
+        public decimal Depth
+        {
+            get { return depth; }
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentException("The depth must be positive number.");
+                }
+                this.depth = value;
+            }
+        }
+
+        public string BillOfLading { get; set; }
+        public FreightState State { get; set; }
+        public decimal TariffWeight { get; set; }
+        public decimal TotalBulkWeight { get; set; }
+        public decimal Price { get; set; }
+        public Location Destination { get; set; }
+
+        public Freight(decimal weight, Customer sender, Customer recipient, Location destination)
+        {
+            this.Weight = weight;
+            this.Sender = sender;
+            this.Recipient = recipient;
+            this.Destination = destination;
+            this.State = FreightState.Processed;
+            this.TariffWeight = weight;
+            this.BillOfLading = GenerateNextBillOfLading();
+            WriteInDatabase(this.BillOfLading);
+        }
+
+        public Freight(decimal weight, Customer sender, Customer recipient, decimal width, decimal height, decimal depth, Location destination)
+            : this(weight, sender, recipient, destination)
+        {
+            this.Width = width;
+            this.Height = height;
+            this.Depth = depth;
+            this.TotalBulkWeight = CalculateBulkWeight();
+            this.TariffWeight = this.Weight > this.TotalBulkWeight ? this.Weight : this.TotalBulkWeight;
+            this.TariffWeight = Math.Ceiling(this.TariffWeight);
+        }
+
+        private decimal CalculateBulkWeight()
+        {
+            return this.Width * this.Height * this.Depth / 6000;
+        }
+
+        public string GenerateNextBillOfLading()
+        {
+            StringBuilder billOfLading = new StringBuilder();
+            string todayFormat = String.Format("{0:yy}{0:MM}{0:dd}", DateTime.Now);
+            billOfLading.Append(todayFormat);
+            billOfLading.AppendFormat("{0:HH}{0:mm}", DateTime.Now);
+            billOfLading.Append(EnumHelper.GetDescription(this.Destination));
+            List<string> allBills = LoadAllBillOfLading();
+            int nextNumberForToday = 1;
+            for (int i = 0; i < allBills.Count; i++)
+            {
+                if (!String.IsNullOrEmpty(allBills[i]))
+                {
+                    if (allBills[i].Substring(0, 6) == todayFormat)
+                    {
+                        int numberOfTheBill=int.Parse(allBills[i].Substring(12));
+                        if (numberOfTheBill>=nextNumberForToday)
+                        {
+                            nextNumberForToday = numberOfTheBill + 1;
+                        }
+                    }
+                }
+            }
+            billOfLading.Append(nextNumberForToday.ToString().PadLeft(3,'0'));
+            return billOfLading.ToString();
+        }
+
+        private void WriteInDatabase(string billOfLading)
+        {
+            StreamWriter writeInFile = new StreamWriter(@"..\..\ListOfBillOfLadings.txt", true);
+            using (writeInFile)
+            {
+                writeInFile.WriteLine(billOfLading);
+            }
+        }
+
+        public void DeleteBillOfLading()
+        {
+            List<string> allBills = LoadAllBillOfLading();
+            if (File.Exists(@"..\..\ListOfBillOfLadings.txt"))
+            {
+                StreamWriter writeInFile = new StreamWriter(@"..\..\ListOfBillOfLadings.txt");
+                using (writeInFile)
+                {
+                    foreach (string bill in allBills)
+                    {
+                        if (bill != this.BillOfLading)
+                        {
+                            writeInFile.WriteLine(bill);
+                        }
+                    }
+                }
+            }
+        }
+
+        private List<string> LoadAllBillOfLading()
+        {
+            List<string> allRows = new List<string>();
+            if (File.Exists(@"..\..\ListOfBillOfLadings.txt"))
+            {
+                StreamReader readFromFile = new StreamReader(@"..\..\ListOfBillOfLadings.txt");
+                
+                using (readFromFile)
+                {
+                    string currentRow = readFromFile.ReadLine();
+                    while (currentRow != null)
+                    {
+                        allRows.Add(currentRow);
+                        currentRow = readFromFile.ReadLine();
+                    }
+                }
+            }
+            return allRows;
+        }
+    }
+}

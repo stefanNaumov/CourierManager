@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CourierManager
+{
+    public class Driver : Employee
+    {
+        public Route DriverRoute { get; set; }
+
+        public Driver(string firstName, string lastName, string address, int idNumber, ulong phone, Route route) 
+            : base(firstName, lastName, address, idNumber, phone)
+        {
+            this.DriverRoute = route;
+        }
+    }
+}

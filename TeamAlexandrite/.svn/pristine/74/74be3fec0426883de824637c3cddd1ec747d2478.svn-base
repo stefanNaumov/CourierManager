@@ -1,0 +1,46 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CourierManager
+{
+    class MediumPacket : Freight
+    {
+        private const string Description = "Above 0,5kg up to 2kg";
+
+        public MediumPacket(decimal weight, Customer sender, Customer recipient, Location destination)
+            : base(weight, sender, recipient, destination)
+        {
+            this.TariffWeight = weight;
+            ValidateAndCalculatePrice();
+        }
+
+        public MediumPacket(decimal weight, Customer sender, Customer recipient, decimal width, decimal height, decimal depth, Location destination)
+            : base(weight, sender, recipient, width, height, depth, destination)
+        {
+            ValidateAndCalculatePrice();
+        }
+
+        private void ValidateAndCalculatePrice()
+        {
+            if (this.TariffWeight <= 0.5m)
+            {
+                throw new ArgumentException("This is a Small Packet!");
+            }
+            else if (this.TariffWeight > 2)
+            {
+                throw new ArgumentException("This is a Large Packet!");
+            }
+            else if (this.TariffWeight <= 1)
+            {
+                this.Price = 7.10m;
+            }
+            else
+            {
+                this.Price = 8.10m;
+            }
+        }
+    }
+}

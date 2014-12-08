@@ -1,0 +1,30 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CourierManager
+{
+    public class InvalidIDNumberException 
+        : ApplicationException
+    {
+        private readonly ulong iDNumber;
+
+        public ulong IDNumber
+        {
+            get { return iDNumber; }
+        }
+
+        public InvalidIDNumberException(string msg, Exception innerEx, ulong iDNumber)
+            : base(msg,innerEx)
+        {
+            this.iDNumber = iDNumber;
+        }
+
+        public InvalidIDNumberException(string msg, ulong iDNumber)
+            : this(msg, null, iDNumber)
+        { 
+        }
+    }
+}

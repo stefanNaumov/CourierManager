@@ -1,0 +1,60 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace TestWPF
+{
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.LayoutRoot.Children.Clear();
+            FirstMenu.Visibility = Visibility.Visible;
+            FirstMenu.Margin = new Thickness(-200, 0, 0, 0);
+            FirstMenu.RowDefinitions.Add(new RowDefinition());
+            FirstMenu.RowDefinitions.Add(new RowDefinition());
+            FirstMenu.RowDefinitions.Add(new RowDefinition());
+            FirstMenu.ColumnDefinitions.Add(new ColumnDefinition());
+            FirstMenu.ColumnDefinitions.Add(new ColumnDefinition());
+            SmallPacket.Checked += (send, ev) => { MediumPacket.IsChecked = false; LargePacket.IsChecked = false; };
+            MediumPacket.Checked += (send, ev) => { SmallPacket.IsChecked = false; LargePacket.IsChecked = false; };
+            LargePacket.Checked += (send, ev) => { SmallPacket.IsChecked = false; MediumPacket.IsChecked = false; };
+            Grid.SetRow(MediumPacket, 1);
+            Grid.SetRow(LargePacket, 2);
+            IndividualCustomer.Checked += (send, ev) => { CompanyCustomer.IsChecked = false; };
+            CompanyCustomer.Checked += (send, ev) => { IndividualCustomer.IsChecked = false; };
+            Grid.SetColumn(IndividualCustomer, 1);
+            Grid.SetRow(CompanyCustomer, 1);
+            Grid.SetColumn(CompanyCustomer, 1);
+            Next.Visibility = Visibility.Visible;
+            this.LayoutRoot.Children.Add(FirstMenu);
+            this.LayoutRoot.Children.Add(Next);
+        }
+
+        private void Next_Click(object sender, RoutedEventArgs e)
+        {
+            this.LayoutRoot.Children.Clear();
+            ClientMenu.Visibility = Visibility.Visible;
+            this.LayoutRoot.Children.Add(ClientMenu);
+        }
+    }
+}

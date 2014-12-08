@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CourierManager
+{
+    class SmallPacket : Freight
+    {
+        private const string Description = "Up to 0,5 kg";
+
+        public SmallPacket(decimal weight, Customer sender, Customer recipient)
+            : base(weight, sender, recipient)
+        {
+            this.Price = 6.10m;
+        }
+    }
+}

@@ -1,0 +1,286 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CourierManager
+{
+    public class Freight
+    {
+        private string pathToDatabase="../../ListOfBillOfLadings.txt";
+        private decimal weight;
+        private decimal width;
+        private decimal height;
+        private decimal depth;
+        private Customer sender;
+        private Customer recipient;
+
+        public string PathToDatabase
+        {
+            get { return pathToDatabase; }
+            set { pathToDatabase = value; }
+        }
+
+        public List<string> AllBills
+        {
+            get;
+            set;
+        }
+
+        public Customer Recipient
+        {
+            get { return this.recipient; }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentException("You must enter a recipient");
+                }
+                this.recipient = value;
+            }
+        }
+
+        public Customer Sender
+        {
+            get { return this.sender; }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentException("You must enter a sender");
+                }
+                this.sender = value;
+            }
+        }
+
+        public decimal Weight
+        {
+            get { return this.weight; }
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentException("The weight must be positive number.");
+                }
+                this.weight = value;
+            }
+        }
+
+        public decimal Width
+        {
+            get { return width; }
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentException("The width must be positive number.");
+                }
+                this.width = value;
+            }
+        }
+
+        public decimal Height
+        {
+            get { return height; }
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentException("The height must be positive number.");
+                }
+                this.height = value;
+            }
+        }
+
+        public decimal Depth
+        {
+            get { return depth; }
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentException("The depth must be positive number.");
+                }
+                this.depth = value;
+            }
+        }
+
+        public string BillOfLading { get; set; }
+        public FreightState State { get; set; }
+        public decimal TariffWeight { get; set; }
+        public decimal TotalBulkWeight { get; set; }
+        public decimal Price { get; set; }
+        public Location Destination { get; set; }
+
+        public Freight(){
+        }
+        public Freight(string pathtodatabase)
+        {
+            this.PathToDatabase = pathtodatabase;
+            this.AllBills = LoadAllBillOfLading();
+        }
+        public Freight(decimal weight, Customer sender, Customer recipient, Location destination)
+            : this(weight, sender, recipient, 0, 0, 0, destination)
+        {
+        }
+
+        public Freight(decimal weight, Customer sender, Customer recipient, decimal width, decimal height, decimal depth, Location destination)
+        {
+            this.Weight = weight;
+            this.Sender = sender;
+            this.Width = width;
+            this.Height = height;
+            this.Depth = depth;
+            this.Recipient = recipient;
+            this.Destination = destination;
+            this.State = FreightState.Processed;
+            this.AllBills = LoadAllBillOfLading();
+            this.BillOfLading = GenerateNextBillOfLading();
+            this.TariffWeight = weight;
+            this.TotalBulkWeight = CalculateBulkWeight();
+            this.TariffWeight = this.Weight > this.TotalBulkWeight ? this.Weight : this.TotalBulkWeight;
+            this.TariffWeight = Math.Ceiling(this.TariffWeight);
+            CalculatePrice();
+            WriteInDatabase();
+        }
+
+        private decimal CalculateBulkWeight()
+        {
+            return this.Width * this.Height * this.Depth / 6000;
+        }
+
+        public string GenerateNextBillOfLading()
+        {
+            StringBuilder billOfLading = new StringBuilder();
+            string todayFormat = String.Format("{0:yy}{0:MM}{0:dd}", DateTime.Now);
+            billOfLading.Append(todayFormat);
+            billOfLading.AppendFormat("{0:HH}{0:mm}", DateTime.Now);
+            billOfLading.Append(EnumHelper.ReturnDescription(this.Destination));
+            int nextNumberForToday = 1;
+            for (int i = 0; i < this.AllBills.Count; i++)
+            {
+                if (!String.IsNullOrEmpty(this.AllBills[i]))
+                {
+                    if (this.AllBills[i].Substring(0, 6) == todayFormat)
+                    {
+                        int numberOfTheBill = int.Parse(this.AllBills[i].Substring(12));
+                        if (numberOfTheBill >= nextNumberForToday)
+                        {
+                            nextNumberForToday = numberOfTheBill + 1;
+                        }
+                    }
+                }
+            }
+            billOfLading.Append(nextNumberForToday.ToString().PadLeft(3, '0'));
+            return billOfLading.ToString();
+        }
+
+        public void WriteInDatabase()
+        {
+            StreamWriter writeInFile = new StreamWriter(this.PathToDatabase, true);
+            char senderType='I';
+            if (this.Sender is CompanyCustomer)
+            {
+                senderType = 'C';
+            }
+            char recipientType='I';
+            if (this.Recipient is CompanyCustomer)
+            {
+                recipientType = 'C';
+            }
+            using (writeInFile)
+            {
+                writeInFile.WriteLine("{0}*{1}*{2}{3}*{4}{5}*{6}*{7}*{8}",
+                    this.AllBills.Count() + 1, this.BillOfLading, this.Sender.ClientNumber,senderType,
+                    this.Recipient.ClientNumber, recipientType, this.Price, this.TariffWeight, this.State);
+            }
+        }
+
+        public void DeleteBillOfLading()
+        {
+            if (File.Exists(this.PathToDatabase))
+            {
+                StreamWriter writeInFile = new StreamWriter(this.PathToDatabase);
+                using (writeInFile)
+                {
+                    foreach (string bill in this.AllBills)
+                    {
+                        if (bill != this.BillOfLading)
+                        {
+                            writeInFile.WriteLine(bill);
+                        }
+                    }
+                }
+            }
+        }
+
+        private List<string> LoadAllBillOfLading()
+        {
+            List<string> allRows = new List<string>();
+            if (File.Exists(this.PathToDatabase))
+            {
+                StreamReader readFromFile = new StreamReader(this.PathToDatabase);
+
+                using (readFromFile)
+                {
+                    string currentRow = readFromFile.ReadLine();
+                    while (currentRow != null)
+                    {
+                        allRows.Add(currentRow);
+                        currentRow = readFromFile.ReadLine();
+                    }
+                }
+            }
+            return allRows;
+        }
+
+        private void CalculatePrice()
+        {
+            if (this.TariffWeight < 0.5m)
+            {
+                this.Price = 6.30m;
+            }
+            else if (this.TariffWeight < 1)
+            {
+                this.Price = 7.80m;
+            }
+            else if (this.TariffWeight < 2)
+            {
+                this.Price = 9.30m;
+            }
+            else if (this.TariffWeight < 5)
+            {
+                this.Price = 11.40m;
+            }
+            else if (this.TariffWeight < 10)
+            {
+                this.Price = 16.50m;
+            }
+            else if (this.TariffWeight < 15)
+            {
+                this.Price = 21.60m;
+            }
+            else if (this.TariffWeight < 20)
+            {
+                this.Price = 25.20m;
+            }
+            else
+            {
+                this.Price = 25.20m + Math.Ceiling(this.TariffWeight - 20)*0.66m;
+            }
+            if (this.Sender is CompanyCustomer)
+            {
+                if (((CompanyCustomer)this.Sender).Statute==CompanyStatute.WithPreferences)
+                {
+                    this.Price *= 0.9m;
+                }
+                else if (((CompanyCustomer)this.Sender).Statute==CompanyStatute.VIP)
+                {
+                    this.Price *= 0.8m;
+                }
+            }
+        }
+    }
+}

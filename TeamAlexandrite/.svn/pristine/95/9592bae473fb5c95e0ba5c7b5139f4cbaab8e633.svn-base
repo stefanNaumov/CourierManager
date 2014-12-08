@@ -1,0 +1,68 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+
+namespace TeamWPF
+{
+    /// <summary>
+    /// Interaction logic for FreightWindow.xaml
+    /// </summary>
+    public partial class CompanyWindow : Window
+    {
+        public CompanyWindow()
+        {
+            InitializeComponent();
+        }
+
+        private void ProcesssCompanyStatute(object sender, RoutedEventArgs e)
+        {
+            NewClient.Click += (send, even) =>
+                {
+                    DefaultStatute.Header = NewClient.Header;
+                };
+            VIPClient.Click += (send, even) =>
+                {
+                    DefaultStatute.Header = VIPClient.Header;
+                };
+            ClientWithPreferences.Click += (send, even) =>
+                {
+                    DefaultStatute.Header = ClientWithPreferences.Header;
+                };
+        }
+
+        private void CompanyIDNumberLostFocus(object sender, RoutedEventArgs e)
+        {
+            CourierManager.CompanyCustomer tempCustomer =
+                new CourierManager.CompanyCustomer("", "", ulong.Parse(this.CompanyIDNumberInput.Text), 1, false);
+            if (!tempCustomer.ValidateIDNumber())
+            {
+                InvalidIDNumber newIDWindow = new InvalidIDNumber();
+                newIDWindow.Show();
+            }
+            tempCustomer.PathToDatabase = "../../../CourierManager/CompanyCustomers.txt";
+            List<string> allCompanyClients = tempCustomer.ReadClientData();
+            for (int record = 0; record < allCompanyClients.Count; record++)
+            {
+                string[] dataArray = allCompanyClients[record].Split('*');
+                string currentIDNumber = dataArray[3];
+                if (this.CompanyIDNumberInput.Text == currentIDNumber)
+                {
+                    this.CompanyNameInput.Text = dataArray[1];
+                    this.CompanyAddressInput.Text = dataArray[2];
+                    this.CompanyPhoneInput.Text = dataArray[4];
+                    break;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CourierManager
+{
+    public class CompanyCustomer: Customer
+    {
+        public CompanyStatute Statute { get; set; }
+
+        public CompanyCustomer(int clientNumber, string address, ulong idNumber, ulong phone) 
+            : base(clientNumber, address, idNumber, phone)
+        {
+            this.Statute = CompanyStatute.New;
+        }
+    }
+}
